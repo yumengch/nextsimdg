@@ -30,19 +30,8 @@ public:
      * @param exter ExternalData for this element (constant).
      * @param phys PhysicsData for this element.
      */
-    virtual void updateDerivedData(
-        const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys)
-    {
-        updateSpecificHumidityAir(exter, phys);
-        updateSpecificHumidityWater(prog, exter, phys);
-        updateSpecificHumidityIce(prog, exter, phys);
-
-        updateAirDensity(exter, phys);
-        updateHeatCapacityWetAir(exter, phys);
-
-        phys.updatedSnowTrueThickness() = prog.snowTrueThickness();
-        phys.updatedIceTrueThickness() = prog.iceTrueThickness();
-    };
+    virtual void atmFluxFromBulk(
+        const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys) = 0;
 
     /*!
      * @brief Performs the 1d physics calculation.
@@ -54,7 +43,7 @@ public:
      * @param exter ExternalData for this element (constant).
      * @param phys PhysicsData for this element.
      */
-    virtual void calculate(const PrognosticData&, const ExternalData&, PhysicsData&) = 0;
+    virtual void growthAndMelt(const PrognosticData&, const ExternalData&, PhysicsData&) = 0;
 
 protected:
     /*!

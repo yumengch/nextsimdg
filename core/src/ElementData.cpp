@@ -77,13 +77,13 @@ void ElementData::configure()
 void ElementData::updateDerivedData(
     const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys)
 {
-    m_physicsImplData->updateDerivedData(prog, exter, phys);
+    m_physicsImplData->atmFluxFromBulk(prog, exter, phys);
 }
 
 void ElementData::calculate(
     const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys)
 {
-    m_physicsImplData->calculate(prog, exter, phys);
+    m_physicsImplData->growthAndMelt(prog, exter, phys);
 }
 
 } /* namespace Nextsim */

@@ -113,9 +113,19 @@ void NextsimPhysics::updateHeatCapacityWetAir(const ExternalData& exter, Physics
     phys.heatCapacityWetAir() = Air::cp + phys.specificHumidityAir() * Vapour::cp;
 };
 
-void NextsimPhysics::calculate(
+void NextsimPhysics::atmFluxFromBulk(
     const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys)
 {
+    updateSpecificHumidityAir(exter, phys);
+    updateSpecificHumidityWater(prog, exter, phys);
+    updateSpecificHumidityIce(prog, exter, phys);
+
+    updateAirDensity(exter, phys);
+    updateHeatCapacityWetAir(exter, phys);
+
+    phys.updatedSnowTrueThickness() = prog.snowTrueThickness();
+    phys.updatedIceTrueThickness() = prog.iceTrueThickness();
+
     massFluxOpenWater(phys);
     momentumFluxOpenWater(phys);
     heatFluxOpenWater(prog, exter, phys);
@@ -124,8 +134,14 @@ void NextsimPhysics::calculate(
     // Ice momentum fluxes are handled by the dynamics
     heatFluxIceAtmosphere(prog, exter, phys);
 
+};
+
+void NextsimPhysics::growthAndMelt(
+    const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys)
+{
     // The mass flux is driven by the heat flux, so that is called first
     heatFluxIceOcean(prog, exter, phys);
+
     // Ice momentum fluxes are handled by the dynamics
     massFluxIceOcean(prog, exter, phys);
 }

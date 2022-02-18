@@ -46,7 +46,10 @@ public:
         MINH_KEY,
     };
 
-    void calculate(const PrognosticData&, const ExternalData&, PhysicsData&) override;
+    void atmFluxFromBulk(
+        const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys) override;
+
+    void growthAndMelt(const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys) override;
 
     //! Calculate the new ice formed this timestep on open water
     void newIceFormation(const PrognosticData& prog, const ExternalData& exter, PhysicsData& phys);

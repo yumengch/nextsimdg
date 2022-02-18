@@ -68,7 +68,7 @@ TEST_CASE("Update derived data", "[NextsimPhysics]")
     data.airPressure() = pair;
 
     NextsimPhysics nsData;
-    nsData.updateDerivedData(data, data, data);
+    nsData.atmFluxFromBulk(data, data, data);
 
     REQUIRE(1.29253 == Approx(data.airDensity()).epsilon(1e-4));
     REQUIRE(0.00385326 == Approx(data.specificHumidityAir()).epsilon(1e-4));
@@ -114,8 +114,8 @@ TEST_CASE("New ice formation", "[NextsimPhysics]")
 
     NextsimPhysics nsphys;
     nsphys.configure();
-    nsphys.updateDerivedData(data, data, data);
-    nsphys.calculate(data, data, data);
+    nsphys.atmFluxFromBulk(data, data, data);
+    nsphys.growthAndMelt(data, data, data);
 
     // Correct for the non-NIST value of the Stefan-Boltzman constant used by old NeXtSIM. This
     // propagates linearly through to the new sea ice value in this case.
@@ -155,20 +155,20 @@ TEST_CASE("Drag pressure", "[NextsimPhysics]")
 
     // Below the lower limit
     data.windSpeed() = 1.5;
-    nsphys.updateDerivedData(data, data, data);
-    nsphys.calculate(data, data, data);
+    nsphys.atmFluxFromBulk(data, data, data);
+    nsphys.growthAndMelt(data, data, data);
     REQUIRE(0.00126936 == Approx(data.dragPressure()).epsilon(1e-4));
 
     // Wind speed dependent
     data.windSpeed() = 8;
-    nsphys.updateDerivedData(data, data, data);
-    nsphys.calculate(data, data, data);
+    nsphys.atmFluxFromBulk(data, data, data);
+    nsphys.growthAndMelt(data, data, data);
     REQUIRE(0.00141407 == Approx(data.dragPressure()).epsilon(1e-4));
 
     // Above the upper limit
     data.windSpeed() = 23;
-    nsphys.updateDerivedData(data, data, data);
-    nsphys.calculate(data, data, data);
+    nsphys.atmFluxFromBulk(data, data, data);
+    nsphys.growthAndMelt(data, data, data);
     REQUIRE(0.00253872 == Approx(data.dragPressure()).epsilon(1e-4));
 
 }
@@ -222,8 +222,8 @@ TEST_CASE("Melting conditions", "[NextsimPhysics]")
     NextsimPhysics nsphys;
     nsphys.configure();
 
-    nsphys.updateDerivedData(data, data, data);
-    nsphys.calculate(data, data, data);
+    nsphys.atmFluxFromBulk(data, data, data);
+    nsphys.growthAndMelt(data, data, data);
 
     // Externally visible values (in PhysicsData)
     REQUIRE(0.12846 == Approx(data.updatedIceTrueThickness()).epsilon(1e-4));
@@ -291,8 +291,8 @@ TEST_CASE("Freezing conditions", "[NextsimPhysics]")
     NextsimPhysics nsphys;
     nsphys.configure();
 
-    nsphys.updateDerivedData(data, data, data);
-    nsphys.calculate(data, data, data);
+    nsphys.atmFluxFromBulk(data, data, data);
+    nsphys.growthAndMelt(data, data, data);
 
     // Externally visible values (in PhysicsData)
     REQUIRE(0.199998 == Approx(data.updatedIceTrueThickness()).epsilon(1e-4));
